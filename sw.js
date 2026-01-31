@@ -1,17 +1,37 @@
 
-// SARA SOBERANA - SERVICE WORKER PASS-THROUGH
-// Este worker existe solo para cumplir con el estándar PWA sin interferir con la red.
+const CACHE_NAME = 'sara-sovereign-v1';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/index.tsx',
+  '/metadata.json'
+];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(self.skipWaiting());
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
+  );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim();
 });
 
-// Protocolo de Inmunidad: No interceptamos para evitar errores de CORS/MIME en entornos sandboxed
 self.addEventListener('fetch', (event) => {
-  // Simplemente dejamos pasar la petición al nexo real
-  return;
+  // Estrategia: Network first, fallback to cache
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    })
+  );
 });
