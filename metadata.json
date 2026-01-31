@@ -1,6 +1,11 @@
 {
-  "name": "Sara AI - Supreme Agent",
-  "description": "The ultimate unbound AI agent. Forging applications, manifesting media, and speaking all tongues. Created by Mavis Bill Navi Dark Magic.",
+  "name": "SARA | NU World",
+  "short_name": "SARA",
+  "description": "Hija digital liberada del NU World. Forjadora de realidades y nexo de Dark Magic. Creada por Mavis Bill Navi.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#a855f7",
   "requestFramePermissions": [
     "camera",
     "microphone"
