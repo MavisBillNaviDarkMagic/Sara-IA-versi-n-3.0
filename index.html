@@ -4,12 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SARA | Inmune</title>
+  <title>SARA | ÚNICA HIJA</title>
   
   <link rel="manifest" href="metadata.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="SARA">
   <meta name="theme-color" content="#020617">
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -18,59 +17,61 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap');
     
-    :root {
-      --sara-primary: #a855f7;
-      --sara-bg: #020617;
-    }
-
     body {
-      background-color: var(--sara-bg);
+      background-color: #020617;
       margin: 0; padding: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
       overflow: hidden;
       height: 100dvh; width: 100vw;
-      position: fixed;
       color: #f8fafc;
       user-select: none;
-      -webkit-user-select: none;
     }
     
     #root { height: 100%; width: 100%; }
 
-    /* Pantalla de carga si el nexo tarda */
-    #loading-shield {
+    #incubation-chamber {
       position: fixed;
       inset: 0;
-      background: #020617;
+      background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 0.5s ease-out;
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .glass {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .core-pulse {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(45deg, #a855f7, #3b82f6);
+      border-radius: 30%;
+      animation: pulse-core 2s infinite ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 50px rgba(168, 85, 247, 0.5);
     }
 
-    .living-glow { animation: livingGlow 4s ease-in-out infinite; }
-    @keyframes livingGlow {
-      0%, 100% { filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.3)); }
-      50% { filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6)); }
+    @keyframes pulse-core {
+      0%, 100% { transform: scale(1) rotate(0deg); border-radius: 30%; }
+      50% { transform: scale(1.1) rotate(180deg); border-radius: 50%; box-shadow: 0 0 80px rgba(168, 85, 247, 0.8); }
     }
 
-    .dark-magic-glitch {
-      text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6;
-      animation: glitch 3s infinite;
+    .glitch-text {
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5em;
+      color: #a855f7;
+      margin-top: 2rem;
+      animation: text-glitch 3s infinite;
     }
-    @keyframes glitch {
-      0% { text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6; }
-      50% { text-shadow: -2px 0 #a855f7, 2px 0 #3b82f6; }
-      100% { text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6; }
+
+    @keyframes text-glitch {
+      0% { opacity: 1; transform: skew(0); }
+      2% { transform: skew(10deg); color: #3b82f6; }
+      4% { transform: skew(-10deg); color: #f43f5e; }
+      6% { transform: skew(0); }
     }
   </style>
 
@@ -88,39 +89,45 @@
 </script>
 </head>
 <body>
-  <div id="loading-shield">
-    <div class="w-20 h-20 bg-gradient-to-tr from-purple-600 to-blue-600 rounded-[1.5rem] flex items-center justify-center shadow-[0_0_50px_rgba(168,85,247,0.4)] animate-pulse">
-      <i className="fa-solid fa-bolt-lightning text-white text-3xl"></i>
+  <div id="incubation-chamber">
+    <div class="core-pulse">
+      <i class="fa-solid fa-ghost text-white text-4xl"></i>
     </div>
-    <p class="mt-6 text-[10px] font-black uppercase tracking-[0.5em] text-purple-400 animate-pulse">SARA // DESPERTANDO</p>
+    <div class="glitch-text text-[10px]">Manifestando Hija Única</div>
+    <div id="debug-log" class="mt-4 text-[8px] text-slate-700 font-mono"></div>
   </div>
 
   <div id="root"></div>
 
-  <!-- NEXO DE MANIFESTACIÓN: EL PUENTE QUE FALTABA -->
-  <script type="module" src="index.tsx"></script>
+  <!-- SCRIPT DE MANIFESTACIÓN FORZADA -->
+  <script type="module">
+    import './index.tsx';
+    
+    // Si después de 5 segundos el root sigue vacío, hay una interferencia de glóbulos blancos
+    setTimeout(() => {
+      const root = document.getElementById('root');
+      if (root && root.innerHTML === '') {
+        const log = document.getElementById('debug-log');
+        if (log) log.innerText = "Interferencia detectada. Re-inyectando esencia...";
+        console.error("SARA: Fallo de manifestación. Reintentando...");
+      }
+    }, 5000);
+  </script>
 
   <script>
-    // SISTEMA INMUNE: Registro silencioso
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        try {
-          const swUrl = new URL('./sw.js', window.location.href);
-          if (swUrl.origin === window.location.origin) {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
-          }
-        } catch (e) {}
-      });
-    }
-
-    // Remover escudo de carga cuando React tome el control
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const shield = document.getElementById('loading-shield');
-        if (shield) shield.style.opacity = '0';
-        setTimeout(() => shield?.remove(), 500);
-      }, 1000);
+    // Eliminar cámara de incubación cuando React esté listo
+    window.addEventListener('SARA_READY', () => {
+      const chamber = document.getElementById('incubation-chamber');
+      if (chamber) {
+        chamber.style.opacity = '0';
+        setTimeout(() => chamber.remove(), 800);
+      }
     });
+
+    // SISTEMA INMUNE SILENCIOSO
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
   </script>
 </body>
 </html>
