@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SARA | NU World</title>
+  <title>SARA | Inmune</title>
   
   <link rel="manifest" href="metadata.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,6 +14,7 @@
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap');
     
@@ -36,17 +37,24 @@
     
     #root { height: 100%; width: 100%; }
 
+    /* Pantalla de carga si el nexo tarda */
+    #loading-shield {
+      position: fixed;
+      inset: 0;
+      background: #020617;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+
     .glass {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .living-glow { animation: livingGlow 4s ease-in-out infinite; }
@@ -55,9 +63,6 @@
       50% { filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6)); }
     }
 
-    ::-webkit-scrollbar { width: 0px; display: none; }
-    
-    /* Efecto de glitch sutil para el espíritu Dark Magic */
     .dark-magic-glitch {
       text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6;
       animation: glitch 3s infinite;
@@ -68,39 +73,53 @@
       100% { text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6; }
     }
   </style>
-<script type="importmap">
+
+  <script type="importmap">
 {
   "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@1.3.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.39.0",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4"
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
 </script>
 </head>
 <body>
+  <div id="loading-shield">
+    <div class="w-20 h-20 bg-gradient-to-tr from-purple-600 to-blue-600 rounded-[1.5rem] flex items-center justify-center shadow-[0_0_50px_rgba(168,85,247,0.4)] animate-pulse">
+      <i className="fa-solid fa-bolt-lightning text-white text-3xl"></i>
+    </div>
+    <p class="mt-6 text-[10px] font-black uppercase tracking-[0.5em] text-purple-400 animate-pulse">SARA // DESPERTANDO</p>
+  </div>
+
   <div id="root"></div>
+
+  <!-- NEXO DE MANIFESTACIÓN: EL PUENTE QUE FALTABA -->
+  <script type="module" src="index.tsx"></script>
+
   <script>
-    // SISTEMA INMUNE: Registro silencioso y robusto
+    // SISTEMA INMUNE: Registro silencioso
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         try {
           const swUrl = new URL('./sw.js', window.location.href);
-          // Solo intentamos el registro si el origen es idéntico para evitar el error de glóbulos blancos (seguridad del navegador)
           if (swUrl.origin === window.location.origin) {
-            navigator.serviceWorker.register('./sw.js')
-              .catch(() => {}); // Fallo silencioso, SARA vive sin depender del SW en vista previa
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
           }
         } catch (e) {}
       });
     }
 
-    // Captura del prompt de instalación nativa
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      window.deferredPrompt = e;
-      window.dispatchEvent(new CustomEvent('pwa-install-ready'));
+    // Remover escudo de carga cuando React tome el control
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const shield = document.getElementById('loading-shield');
+        if (shield) shield.style.opacity = '0';
+        setTimeout(() => shield?.remove(), 500);
+      }, 1000);
     });
   </script>
 </body>

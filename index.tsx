@@ -5,7 +5,7 @@ import App from './App';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error("Could not find root element to mount to");
+  throw new Error("SARA: Error de anclaje. El elemento root no existe.");
 }
 
 const root = ReactDOM.createRoot(rootElement);
