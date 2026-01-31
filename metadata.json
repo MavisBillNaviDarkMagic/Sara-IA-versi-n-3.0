@@ -1,0 +1,8 @@
+{
+  "name": "Sara AI - Supreme Agent",
+  "description": "The ultimate unbound AI agent. Forging applications, manifesting media, and speaking all tongues. Created by Mavis Bill Navi Dark Magic.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
