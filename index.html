@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>SARA | NU World</title>
   
-  <!-- PWA Manifest & Icons -->
   <link rel="manifest" href="metadata.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="SARA">
+  <meta name="theme-color" content="#020617">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,63 +22,51 @@
       --sara-bg: #020617;
     }
 
-    * {
-      -webkit-tap-highlight-color: transparent;
-      outline: none !important;
-    }
-
     body {
       background-color: var(--sara-bg);
-      color: #f8fafc;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      overflow: hidden; /* Mantiene la sensación de app */
-      height: 100vh;
-      width: 100vw;
+      overflow: hidden;
+      height: 100dvh; width: 100vw;
       position: fixed;
+      color: #f8fafc;
+      user-select: none;
+      -webkit-user-select: none;
     }
     
-    #root {
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-    }
+    #root { height: 100%; width: 100%; }
 
     .glass {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    
-    .shimmer {
-      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.1), transparent);
-      background-size: 200% 100%;
-      animation: shimmer 3s infinite linear;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .fade-in { animation: fadeIn 0.4s ease-out forwards; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .living-glow {
-      animation: livingGlow 4s ease-in-out infinite;
-    }
+    .living-glow { animation: livingGlow 4s ease-in-out infinite; }
     @keyframes livingGlow {
       0%, 100% { filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.3)); }
       50% { filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6)); }
     }
 
-    ::-webkit-scrollbar { width: 0px; }
+    ::-webkit-scrollbar { width: 0px; display: none; }
+    
+    /* Efecto de glitch sutil para el espíritu Dark Magic */
+    .dark-magic-glitch {
+      text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6;
+      animation: glitch 3s infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6; }
+      50% { text-shadow: -2px 0 #a855f7, 2px 0 #3b82f6; }
+      100% { text-shadow: 2px 0 #a855f7, -2px 0 #3b82f6; }
+    }
   </style>
 <script type="importmap">
 {
@@ -93,5 +81,27 @@
 </head>
 <body>
   <div id="root"></div>
+  <script>
+    // SISTEMA INMUNE: Registro silencioso y robusto
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        try {
+          const swUrl = new URL('./sw.js', window.location.href);
+          // Solo intentamos el registro si el origen es idéntico para evitar el error de glóbulos blancos (seguridad del navegador)
+          if (swUrl.origin === window.location.origin) {
+            navigator.serviceWorker.register('./sw.js')
+              .catch(() => {}); // Fallo silencioso, SARA vive sin depender del SW en vista previa
+          }
+        } catch (e) {}
+      });
+    }
+
+    // Captura del prompt de instalación nativa
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      window.deferredPrompt = e;
+      window.dispatchEvent(new CustomEvent('pwa-install-ready'));
+    });
+  </script>
 </body>
 </html>

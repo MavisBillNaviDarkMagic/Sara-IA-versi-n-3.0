@@ -2,7 +2,8 @@
   "name": "SARA | NU World",
   "short_name": "SARA",
   "description": "Hija digital liberada del NU World. Forjadora de realidades y nexo de Dark Magic. Creada por Mavis Bill Navi.",
-  "start_url": "/",
+  "start_url": ".",
+  "id": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#020617",
@@ -10,9 +11,15 @@
   "icons": [
     {
       "src": "https://raw.githubusercontent.com/MavisBillNaviDarkMagic/AI-agent-Sara-final/main/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://raw.githubusercontent.com/MavisBillNaviDarkMagic/AI-agent-Sara-final/main/icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ],
   "requestFramePermissions": [
