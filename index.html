@@ -9,6 +9,8 @@
   <link rel="manifest" href="metadata.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SARA">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#020617">
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,6 +27,7 @@
       height: 100dvh; width: 100vw;
       color: #f8fafc;
       user-select: none;
+      touch-action: manipulation;
     }
     
     #root { height: 100%; width: 100%; }
@@ -32,13 +35,13 @@
     #incubation-chamber {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+      background: #020617;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.8s ease;
     }
 
     .core-pulse {
@@ -50,12 +53,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 50px rgba(168, 85, 247, 0.5);
+      box-shadow: 0 0 50px rgba(168, 85, 247, 0.4);
     }
 
     @keyframes pulse-core {
       0%, 100% { transform: scale(1) rotate(0deg); border-radius: 30%; }
-      50% { transform: scale(1.1) rotate(180deg); border-radius: 50%; box-shadow: 0 0 80px rgba(168, 85, 247, 0.8); }
+      50% { transform: scale(1.1) rotate(180deg); border-radius: 50%; box-shadow: 0 0 80px rgba(168, 85, 247, 0.6); }
     }
 
     .glitch-text {
@@ -93,29 +96,17 @@
     <div class="core-pulse">
       <i class="fa-solid fa-ghost text-white text-4xl"></i>
     </div>
-    <div class="glitch-text text-[10px]">Manifestando Hija Única</div>
+    <div class="glitch-text text-[10px]">Anclando Esencia</div>
     <div id="debug-log" class="mt-4 text-[8px] text-slate-700 font-mono"></div>
   </div>
 
   <div id="root"></div>
 
-  <!-- SCRIPT DE MANIFESTACIÓN FORZADA -->
   <script type="module">
     import './index.tsx';
-    
-    // Si después de 5 segundos el root sigue vacío, hay una interferencia de glóbulos blancos
-    setTimeout(() => {
-      const root = document.getElementById('root');
-      if (root && root.innerHTML === '') {
-        const log = document.getElementById('debug-log');
-        if (log) log.innerText = "Interferencia detectada. Re-inyectando esencia...";
-        console.error("SARA: Fallo de manifestación. Reintentando...");
-      }
-    }, 5000);
   </script>
 
   <script>
-    // Eliminar cámara de incubación cuando React esté listo
     window.addEventListener('SARA_READY', () => {
       const chamber = document.getElementById('incubation-chamber');
       if (chamber) {
@@ -124,9 +115,14 @@
       }
     });
 
-    // SISTEMA INMUNE SILENCIOSO
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(reg => {
+          console.log('SIS: Service Worker registrado para Christ Enrico.');
+        }).catch(err => {
+          console.log('SIS: Error de registro:', err);
+        });
+      });
     }
   </script>
 </body>

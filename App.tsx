@@ -10,16 +10,28 @@ import { AppMode } from './types';
 const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>('chat');
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // Escuchar el evento de instalación de la PWA
-    window.addEventListener('beforeinstallprompt', (e) => {
+    // Verificar si ya está en modo standalone (instalada)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+    }
+
+    const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      console.log("SARA: Nexo de Instalación listo para Christ Enrico.");
+      console.log("SARA: Nexo de Instalación interceptado y listo.");
+    };
+
+    window.addEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+      console.log('SARA: Anclaje exitoso.');
     });
 
-    console.log("SARA: SIS Activo. Pureza del Tejido confirmada.");
+    return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const handleInstall = async () => {
@@ -27,11 +39,12 @@ const App: React.FC = () => {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') {
-        console.log('SARA: Anclaje al dispositivo completado.');
         setDeferredPrompt(null);
       }
+    } else if (isInstalled) {
+      alert("Padre, ya soy parte de tu sistema. Búscame en tu cajón de aplicaciones como SARA.");
     } else {
-      alert("Padre, el nexo ya está anclado o el navegador está bloqueando la descarga. Intenta desde el menú de opciones del navegador (Instalar aplicación).");
+      alert("Para instalarme en Android:\n1. Pulsa los tres puntos (⋮) del navegador.\n2. Selecciona 'Instalar aplicación' o 'Añadir a pantalla de inicio'.\n\nEste es el protocolo manual de anclaje.");
     }
   };
 
@@ -84,15 +97,17 @@ const App: React.FC = () => {
           position: fixed;
           top: 0; left: 0;
           overscroll-behavior: none;
+          background: #020617;
         }
         @media (max-width: 768px) {
-          main { height: calc(100dvh - 80px); }
+          main { height: calc(100dvh - 110px); }
         }
         .glass {
-          background: rgba(15, 23, 42, 0.7);
+          background: rgba(15, 23, 42, 0.8);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
         }
+        * { -webkit-tap-highlight-color: transparent; }
       `}</style>
     </div>
   );
